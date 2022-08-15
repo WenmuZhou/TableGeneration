@@ -37,7 +37,7 @@ def parse_args():
     # windows size
     parser.add_argument('--brower_width', type=int, default=1920, help='width of brower')
     parser.add_argument('--brower_height', type=int, default=2440, help='height of brower')
-    parser.add_argument('--brower', type=str, default='firefox', help='chrome or firefox')
+    parser.add_argument('--brower', type=str, default='chrome', help='chrome or firefox')
 
     args = parser.parse_args()
     if args.brower == 'chrome' and sys.platform == 'darwin':
