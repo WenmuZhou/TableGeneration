@@ -1,16 +1,3 @@
-# Copyright (c) 2021 PaddlePaddle Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 import os
 from tqdm import tqdm
 import cv2
@@ -30,7 +17,12 @@ def parse_line(data_dir, line):
     if not os.path.exists(img_path):
         print(img_path)
         return None
-    data = {'img_path': img_path, 'cells': cells, 'structure': structure, 'file_name': file_name}
+    data = {
+        'img_path': img_path,
+        'cells': cells,
+        'structure': structure,
+        'file_name': file_name
+    }
     return data
 
 
@@ -73,11 +65,13 @@ def skip_char(text, sp_char_list):
         text = text.replace(sp_char, '')
     return text
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image_dir', type=str)
     parser.add_argument('--gt_path', type=str)
     return parser.parse_args()
+
 
 if __name__ == '__main__':
     args = parse_args()
@@ -122,7 +116,8 @@ if __name__ == '__main__':
         f_html.write(f'<td> imgs/{img_name}.jpg <br/>\n')
         f_html.write(f'<td><img src="imgs/{img_name}.jpg" width=640></td>')
         f_html.write('<td><table  border="1">' + html + '</table></td>')
-        f_html.write(f'<td><img src="imgs/{img_name}_show.jpg" width=640></td>')
+        f_html.write(
+            f'<td><img src="imgs/{img_name}_show.jpg" width=640></td>')
 
         f_html.write("</tr>\n")
     f_html.write('</table></body></html>')
