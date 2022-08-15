@@ -1,12 +1,12 @@
 # TableGeneration
 
-本repo包含论文 [Rethinking Table Parsing using Graph Neural Networks](https://arxiv.org/pdf/1905.13391.pdf)的源代码修改版.
-原代码地址为 https://github.com/hassan-mahmood/TIES_DataGeneration 。
+通过浏览器渲染生成表格图像，代码修改自论文 [Rethinking Table Parsing using Graph Neural Networks](https://arxiv.org/pdf/1905.13391.pdf) [源代码](https://github.com/hassan-mahmood/TIES_DataGeneration) 。
 
-主要修改如下：
+修改后主要特性如下：
 
-1. 支持更多参数可配置，如单元格类型，表格行列，合并单元格数量，单元格颜色
-2. 内置四种类型表格，如下表所示
+1. 支持更多参数可配置，如单元格类型，表格行列，合并单元格数量，
+2. 支持彩色单元格
+3. 内置四种类型表格，如下表所示
 
 |类型|样例|
 |---|---|
@@ -127,7 +127,7 @@ driver.close()
 
 ```bash
 # 简单表格
-python3 generate_data.py --output output/simple_table --num=1 
+python3 generate_data.py --output output/simple_table --num=1
 # 单元格坐标为单元格内文字坐标的表格
 python3 generate_data.py --output output/simple_table --num=1 --cell_box_type='text'
 # 彩色单元格表格
