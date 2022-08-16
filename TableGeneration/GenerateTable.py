@@ -68,7 +68,8 @@ class GenerateTable:
 
     def gen_table_img(self, img_count):
         os.makedirs(self.output, exist_ok=True)
-        f_gt = open(os.path.join(self.output, 'gt.txt'), encoding='utf-8', mode='w')
+        f_gt = open(
+            os.path.join(self.output, 'gt.txt'), encoding='utf-8', mode='w')
         for i in tqdm(range(img_count)):
             # data_arr contains the images of generated tables and all_table_categories contains the table category of each of the table
             out = self.generate_table()
@@ -79,7 +80,9 @@ class GenerateTable:
             im, contens = self.clip_white(im, contens)
 
             # randomly select a name of length=20 for file.
-            output_file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=20))
+            output_file_name = ''.join(
+                random.choices(
+                    string.ascii_uppercase + string.digits, k=20))
             output_file_name = '{}_{}_{}'.format(border, i, output_file_name)
             # print('{}/{}, {}'.format(i, img_count, output_file_name))
 
@@ -87,17 +90,22 @@ class GenerateTable:
             os.makedirs(os.path.join(self.output, 'html'), exist_ok=True)
             os.makedirs(os.path.join(self.output, 'img'), exist_ok=True)
 
-            html_save_path = os.path.join(self.output, 'html', output_file_name + '.html')
-            img_save_path = os.path.join(self.output, 'img', output_file_name + '.jpg')
+            html_save_path = os.path.join(self.output, 'html',
+                                          output_file_name + '.html')
+            img_save_path = os.path.join(self.output, 'img',
+                                         output_file_name + '.jpg')
             with open(html_save_path, encoding='utf-8', mode='w') as f:
                 f.write(html_content)
             im.save(img_save_path, dpi=(600, 600))
 
             # 构造标注信息
             img_file_name = os.path.join('img', output_file_name + '.jpg')
-            label_info = self.make_ppstructure_label(structure, contens, img_file_name)
+            label_info = self.make_ppstructure_label(structure, contens,
+                                                     img_file_name)
 
-            f_gt.write('{}\n'.format(json.dumps(label_info, ensure_ascii=False)))
+            f_gt.write('{}\n'.format(
+                json.dumps(
+                    label_info, ensure_ascii=False)))
         # convert to PP-Structure label format
         f_gt.close()
         self.close()
@@ -108,9 +116,12 @@ class GenerateTable:
         rows = random.randint(self.min_row, self.max_row)
         try:
             # initialize table class
-            table = Table(self.ch_dict_path, self.en_dict_path, self.cell_box_type, rows, cols, self.min_txt_len,
-                          self.max_txt_len, self.max_span_row_count, self.max_span_col_count, self.max_span_value,
-                          self.color_prob, self.cell_max_width, self.cell_max_height)
+            table = Table(self.ch_dict_path, self.en_dict_path,
+                          self.cell_box_type, rows, cols, self.min_txt_len,
+                          self.max_txt_len, self.max_span_row_count,
+                          self.max_span_col_count, self.max_span_value,
+                          self.color_prob, self.cell_max_width,
+                          self.cell_max_height)
             # get table of rows and cols based on unlv distribution and get features of this table
             # (same row, col and cell matrices, total unique ids, html conversion of table and its category)
             id_count, html_content, structure, border = table.create()
@@ -129,7 +140,14 @@ class GenerateTable:
         return None
 
     def make_ppstructure_label(self, structure, bboxes, img_path):
-        d = {'filename': img_path, 'html': {'structure': {'tokens': structure}}}
+        d = {
+            'filename': img_path,
+            'html': {
+                'structure': {
+                    'tokens': structure
+                }
+            }
+        }
         cells = []
         for bbox in bboxes:
             text = bbox[1]
@@ -141,14 +159,20 @@ class GenerateTable:
     def rebuild_html_from_ppstructure_label(self, label_info):
         from html import escape
         html_code = label_info['html']['structure']['tokens'].copy()
-        to_insert = [i for i, tag in enumerate(html_code) if tag in ('<td>', '>')]
+        to_insert = [
+            i for i, tag in enumerate(html_code) if tag in ('<td>', '>')
+        ]
         for i, cell in zip(to_insert[::-1], label_info['html']['cells'][::-1]):
             if cell['tokens']:
-                cell = [escape(token) if len(token) == 1 else token for token in cell['tokens']]
+                cell = [
+                    escape(token) if len(token) == 1 else token
+                    for token in cell['tokens']
+                ]
                 cell = ''.join(cell)
                 html_code.insert(i + 1, cell)
         html_code = ''.join(html_code)
-        html_code = '<html><body><table>{}</table></body></html>'.format(html_code)
+        html_code = '<html><body><table>{}</table></body></html>'.format(
+            html_code)
         return html_code
 
     def clip_white(self, im, bboxes):
@@ -161,8 +185,8 @@ class GenerateTable:
 
         xmin = max(0, xmin - random.randint(0, 10))
         ymin = max(0, ymin - random.randint(0, 10))
-        xmax = min(w, xmax + random.randint(0, 10))
-        ymax = min(h, ymax + random.randint(0, 10))
+        xmax = min(w, xmax + random.randint(2, 10))
+        ymax = min(h, ymax + random.randint(2, 10))
         im = im.crop([xmin, ymin, xmax, ymax])
 
         bbox[:, :, 0] -= xmin
@@ -175,15 +199,19 @@ class GenerateTable:
         '''converts html to image'''
         self.driver.get("data:text/html;charset=utf-8," + html_content)
         self.driver.maximize_window()
-        self.driver.set_window_size(width=self.brower_width, height=self.brower_height, windowHandle="current")
+        self.driver.set_window_size(
+            width=self.brower_width,
+            height=self.brower_height,
+            windowHandle="current")
         window_size = self.driver.get_window_size()
         max_height, max_width = window_size['height'], window_size['width']
-        # element = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, '0')))
-
+        # element = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.ID, '0')))
         contens = []
         for id in range(id_count):
             # e = driver.find_element_by_id(str(id))
-            e = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.ID, str(id))))
+            e = WebDriverWait(
+                self.driver,
+                3).until(EC.presence_of_element_located((By.ID, str(id))))
             txt = e.text.strip()
             lentext = len(txt)
             loc = e.location
@@ -193,7 +221,10 @@ class GenerateTable:
             xmax = int(size_['width'] + xmin)
             ymax = int(size_['height'] + ymin)
 
-            contens.append([lentext, txt, [[xmin, ymin], [xmax, ymin], [xmax, ymax], [xmin, ymax]]])
+            contens.append([
+                lentext, txt, [[xmin, ymin], [xmax, ymin], [xmax, ymax],
+                               [xmin, ymax]]
+            ])
 
         png = self.driver.get_screenshot_as_png()
 

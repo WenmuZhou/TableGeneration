@@ -148,9 +148,9 @@ python3 vis_gt.py --image_dir path/to/imgs --gt_path path/to/gt.txt
 
 这个命令会生成一个html页面，在html页面中会展示图片名、原图、表格的可视化和cell坐标。如下所示:
 
-|类型|样例|
-|---|---|
-|cell坐标为单元格内文字坐标 | ![](imgs/sample.jpg) |
+|类型| 样例                     |
+|---|------------------------|
+|cell坐标为单元格内文字坐标 | ![](imgs/text_box.jpg) |
 |cell坐标为真实单元格坐标 | ![](imgs/cell_box.jpg) |
 
 ## 表格生成流程:
