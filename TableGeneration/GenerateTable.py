@@ -245,8 +245,8 @@ class GenerateTable:
             if self.is_macos:
                 xmin *= self.ratio
                 ymin *= self.ratio
-                xmax *= self.xmax
-                ymax *= self.ymax
+                xmax *= self.ratio
+                ymax *= self.ratio
 
             contens.append([
                 lentext, txt, [[xmin, ymin], [xmax, ymin], [xmax, ymax],
